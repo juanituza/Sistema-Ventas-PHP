@@ -5,7 +5,7 @@ include_once "entidades/producto.php";
 $pg = "Listado de productos";
 
 $producto = new Producto();
-$aProductos = $producto-> obtenerTodos();
+$aProductos = $producto->obtenerTodos();
 
 include_once("header.php");
 ?>
@@ -21,7 +21,7 @@ include_once("header.php");
     </div>
     <table class="table table-hover border">
         <tr>
-            
+
             <th>Nombre</th>
             <th>Cantidad</th>
             <th>Precio</th>
@@ -36,7 +36,7 @@ include_once("header.php");
                 <td><?php echo $producto->descripcion; ?></td>
                 <td><?php echo $producto->imagen; ?></td>
                 <td style="width: 110px;">
-                    <a href="producto-formulario.php?id=<?php echo $producto->idproducto; ?>"></a>
+                    <a href="producto-formulario.php?id=<?php echo $producto->idproducto; ?>"><i class="fas fa-search"></i></a>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -2,7 +2,7 @@
 
 class TipoProducto
 {
-    private $id_tipoproducto;
+    private $idtipoproducto;
     private $nombre;
     
 
@@ -24,7 +24,7 @@ class TipoProducto
 
     public function cargarFormulario($request)
     {
-        $this->id_tipoproducto = isset($request["id"]) ? $request["id"] : "";
+        $this->idtipoproducto = isset($request["id"]) ? $request["id"] : "";
         $this->nombre = isset($request["txtNombre"]) ? $request["txtNombre"] : "";
     }
 
@@ -38,15 +38,13 @@ class TipoProducto
                     
                 ) VALUES (
                     '$this->nombre'
-                    
                 );";
-        // print_r($sql);exit;
         //Ejecuta la query
         if (!$mysqli->query($sql)) {
             printf("Error en query: %s\n", $mysqli->error . " " . $sql);
         }
         //Obtiene el id generado por la inserción
-        $this->id_tipoproducto = $mysqli->insert_id;
+        $this->idtipoproducto = $mysqli->insert_id;
         //Cierra la conexión
         $mysqli->close();
     }
@@ -56,8 +54,8 @@ class TipoProducto
 
         $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE, Config::BBDD_PORT);
         $sql = "UPDATE tipo_productos SET
-                nombre = ' . $this->nombre . '
-                WHERE id_tipoproducto = " . $this->id_tipoproducto;
+                nombre = '$this->nombre'
+                WHERE idtipoproducto = " . $this->idtipoproducto;
 
         if (!$mysqli->query($sql)) {
             printf("Error en query: %s\n", $mysqli->error . " " . $sql);
@@ -68,7 +66,7 @@ class TipoProducto
     public function eliminar()
     {
         $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE, Config::BBDD_PORT);
-        $sql = "DELETE FROM tipo_productos WHERE id_tipoproducto = " . $this->id_tipoproducto;
+        $sql = "DELETE FROM tipo_productos WHERE idtipoproducto = " . $this->idtipoproducto;
         //Ejecuta la query
         if (!$mysqli->query($sql)) {
             printf("Error en query: %s\n", $mysqli->error . " " . $sql);
@@ -79,18 +77,17 @@ class TipoProducto
     public function obtenerPorId()
     {
         $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE, Config::BBDD_PORT);
-        $sql = "SELECT id_tipoproducto,
-                        nombre,
-                        
+        $sql = "SELECT idtipoproducto,
+                        nombre                        
                 FROM tipo_productos
-                WHERE id_tipoproducto = $this->id_tipoproducto";
+                WHERE idtipoproducto = " . $this->idtipoproducto;
         if (!$resultado = $mysqli->query($sql)) {
             printf("Error en query: %s\n", $mysqli->error . " " . $sql);
         }
 
         //Convierte el resultado en un array asociativo
         if ($fila = $resultado->fetch_assoc()) {
-            $this->id_tipoproducto = $fila["id_tipoproducto"];
+            //$this->idtipoproducto = $fila["idtipoproducto"];
             $this->nombre = $fila["nombre"];
         }
         $mysqli->close();
@@ -100,7 +97,7 @@ class TipoProducto
      public function obtenerTodos(){
         $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE, Config::BBDD_PORT);
         $sql = "SELECT 
-                    id_tipoproducto,
+                    idtipoproducto,
                     nombre
                 FROM tipo_productos";
         if (!$resultado = $mysqli->query($sql)) {
@@ -113,7 +110,7 @@ class TipoProducto
 
             while($fila = $resultado->fetch_assoc()){
                 $entidadAux = new TipoProducto();
-                $entidadAux->id_tipoproducto = $fila["id_tipoproducto"];
+                $entidadAux->idtipoproducto = $fila["idtipoproducto"];
                 $entidadAux->nombre = $fila["nombre"];
                 $aResultado[] = $entidadAux;
             }

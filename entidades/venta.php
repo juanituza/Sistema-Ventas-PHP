@@ -133,6 +133,7 @@ class Venta
             $this->cantidad = $fila["cantidad"];
             $this->preciounitario = $fila["preciounitario"];
             $this->total = $fila["total"];
+            
          }
         $mysqli->close();
 

@@ -31,7 +31,7 @@ include_once("header.php");
 
                 <td><?php echo $tipoProducto->nombre; ?></td>
                 <td style="width: 110px;">
-                    <a href="tipoproducto-formulario.php?id=<?php echo $tipoProducto->id_tipoproducto; ?>"><i class="fas fa-search"></i></a>
+                    <a href="tipoproducto-formulario.php?id=<?php echo $tipoProducto->idtipoproducto; ?>"><i class="fas fa-search"></i></a>
                 </td>
             </tr>
         <?php endforeach; ?>

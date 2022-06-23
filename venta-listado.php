@@ -2,10 +2,14 @@
 
 include_once "config.php";
 include_once "entidades/venta.php";
+include_once "entidades/cliente.php";
 $pg = "Listado de ventas";
 
 $venta = new Venta();
 $aVentas = $venta->obtenerTodos();
+
+$cliente = new Cliente();
+$aClientes = $cliente->obtenerTodos();
 
 include_once("header.php");
 ?>
@@ -21,17 +25,19 @@ include_once("header.php");
     </div>
     <table class="table table-hover border">
         <tr>
-            
+
             <th>Fecha</th>
+            <th>Cliente</th>
             <th>Cantidad</th>
             <th>Precio Unitario</th>
             <th>Total</th>
-            
+
         </tr>
         <?php foreach ($aVentas as $venta) : ?>
             <tr>
-                
+
                 <td><?php echo date_format(date_create($venta->fecha), "d/m/Y"); ?></td>
+                <td><?php echo $venta->fk_idcliente; ?></td>
                 <td><?php echo $venta->cantidad; ?></td>
                 <td><?php echo $venta->preciounitario; ?></td>
                 <td><?php echo $venta->total; ?></td>

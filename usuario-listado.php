@@ -22,7 +22,7 @@ include_once("header.php");
     <table class="table table-hover border">
         <tr>
             <th>Usuario</th>
-            <th>Clave</th>
+           
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Correo</th>
@@ -32,7 +32,7 @@ include_once("header.php");
         <?php foreach ($aUsuarios as $usuario) : ?>
             <tr>
                 <td><?php echo $usuario->usuario; ?></td>
-                <td><?php echo $usuario->clave; ?></td>
+               
                 <td><?php echo $usuario->nombre; ?></td>
                 <td><?php echo $usuario->apellido; ?></td>
                 <td><?php echo $usuario->correo; ?></td>
