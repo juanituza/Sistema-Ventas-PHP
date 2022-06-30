@@ -1,25 +1,34 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-session_start();
+
+
+include_once ("config.php");
+include_once ("entidades/usuario.php");
+
+
 
 if($_POST){
-  $usuario = trim($_REQUEST["txtUsuario"]);
+  $usuario = trim($_REQUEST["txtUsuario"]);//trim elimina espacios de los laterales
   $clave = trim($_REQUEST["txtClave"]);
 
-  //Si el usuario es admin y la clave es admin123
-  if ($usuario == "admin" && $clave == "admin123") {
+  //Buscamos en la BBDD si existe el usuario que ingreso la persona
+  //obtenerPorNombre
+ $entidadUsuario = new Usuario;
+ $entidadUsuario->obtenerPorUsuario($usuario);
+
+  //Si existe con ese nombre y la clave se verifica con la del usuario de la BBDD
+  if ($entidadUsuario -> usuario != "" && password_verify($clave, $entidadUsuario->clave)) {
     //Crear una variable de session con tu nombre
+  // if ($usuario=="admin" && $clave=="admin1234") {
+  
    
-    $_SESSION["nombre"] = "Juan Ignacio";
-    
+    $_SESSION["nombre"] = $entidadUsuario->nombre;
     //Redireccionar a index.php
     header("location: index.php");
-  }else //sino
+  }else { //sino
   //$msg = "Usuario o clave incorrecto";
   $msg= "Usuario o clave incorrecto";
+  }
 }
 
 

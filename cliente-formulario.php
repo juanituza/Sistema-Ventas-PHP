@@ -146,7 +146,7 @@ include_once("header.php");
                                     <option selected value="<?php echo $localidad->idlocalidad; ?>"><?php echo $localidad->nombre; ?></option>
                                 <?php else : ?>
                                     <option value="<?php echo $localidad->idlocalidad; ?>"><?php echo $localidad->nombre; ?></option>
-                                <? endif; ?>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         </select>
                     </div>

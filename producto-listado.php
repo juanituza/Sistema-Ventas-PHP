@@ -22,20 +22,21 @@ include_once("header.php");
     <table class="table table-hover border">
         <tr>
 
+            <th>Foto</th>
             <th>Nombre</th>
             <th>Cantidad</th>
             <th>Precio</th>
             <th>Descripcion</th>
-            <th>Imagen</th>
+
         </tr>
         <?php foreach ($aProductos as $producto) : ?>
             <tr>
+                <td><img src="files/<?php echo $producto->imagen; ?>" class=" img-thumbnail" style="width=50 height=50 "></td>
                 <td><?php echo $producto->nombre; ?></td>
                 <td><?php echo $producto->cantidad; ?></td>
-                <td><?php echo $producto->precio; ?></td>
+                <td><?php echo number_format($producto->precio, 2, ",", "."); ?></td>
                 <td><?php echo $producto->descripcion; ?></td>
-                <td><?php echo $producto->imagen; ?></td>
-                <td style="width: 110px;">
+                <td style=" width: 110px;">
                     <a href="producto-formulario.php?id=<?php echo $producto->idproducto; ?>"><i class="fas fa-search"></i></a>
                 </td>
             </tr>

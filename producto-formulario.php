@@ -4,24 +4,63 @@ include_once("config.php");
 include_once("entidades/producto.php");
 include_once("entidades/tipoproducto.php");
 
+$pg = "Listado de Productos";
 
 $producto = new Producto();
 $producto->cargarFormulario($_REQUEST);
 
-$pg = "Listado de Productos";
 
 if ($_POST) {
     if (isset($_POST["btnGuardar"])) {
-        if (isset($_GET["id"]) && $_GET["id"] > 0) {
+       if (isset($_GET["id"]) && $_GET["id"] > 0) {
+        // buscar el producto para extraer el nombre anterior de la imagen por el id
+           $productoAux= new Producto();//genero un nuevo producto
+           $productoAux->idproducto= $_GET['id'];// traigo los datos por su id
+           $productoAux->obtenerPorId();// traigo los datos por su id
+           //subo la imagen nueva
+            if ($_FILES["fileImagen"]["error"] === UPLOAD_ERR_OK) {
+                if (file_exists("files/" . $productoAux->imagen)) {
+                    unlink("files/" . $productoAux->imagen);
+                }
+
+                $nombreAleatorio = date("Ymdhmsi");
+                $extension = pathinfo($_FILES["fileImagen"]["name"], PATHINFO_EXTENSION);
+                $archivo_tpm = $_FILES["fileImagen"]["tmp_name"];
+                $nombreDeImagen = $producto->imagen = "$nombreAleatorio.$extension";
+                if ($extension == "jpg" || $extension == "jpeg" || $extension == "png") {
+                    move_uploaded_file($archivo_tpm, "files/$nombreAleatorio.$extension");
+                    $producto->imagen = "$nombreAleatorio.$extension";
+                }
+            }else{//sino la imagen es la misma
+                    $producto->imagen = $productoAux->imagen;
+            }                
             //Actualizo un cliente existente
             $producto->actualizar();
+            
         } else {
+            if ($_FILES["fileImagen"]["error"] === UPLOAD_ERR_OK) {
+
+                $nombreAleatorio = date("Ymdhmsi");
+                $archivo_tpm = $_FILES["fileImagen"]["tmp_name"];
+                $extension = pathinfo($_FILES["fileImagen"]["name"], PATHINFO_EXTENSION);
+                if ($extension == "jpg" || $extension == "jpeg" || $extension == "png") {
+                    move_uploaded_file($archivo_tpm, "files/$nombreAleatorio.$extension");
+                    $producto->imagen = "$nombreAleatorio.$extension";
+                }
+            }    
+                   
             //Es nuevo
             $producto->insertar();
         }
         $msg["texto"] = "Guardado correctamente";
         $msg["codigo"] = "alert-success";
     } else if (isset($_POST["btnBorrar"])) {
+        $productoAux = new Producto();
+        $productoAux->idproducto = $_GET["id"];
+        $productoAux->obtenerPorId();
+        if ($productoAux->imagen!=" " && file_exists("files/" . $productoAux->imagen)) {
+            unlink("files/" . $productoAux->imagen);
+        }
         $producto->eliminar();
         header("Location: producto-listado.php");
     }
@@ -38,9 +77,10 @@ if (isset($_GET["id"]) && $_GET["id"] > 0) {
     $producto->obtenerPorId();
 }
 
-
 $tipoProducto = new TipoProducto();
 $aTipoProductos = $tipoProducto->obtenerTodos();
+
+
 
 include_once("header.php");
 ?>
@@ -89,11 +129,11 @@ include_once("header.php");
 
             <div class="col-6 form-group">
                 <label for="txtCantidad">Cantidad:</label>
-                <input type="number" required class="form-control" name="txtCantidad" id="txtCantidad" value="<?php echo $producto->cantidad ?>">
+                <input type="number"  class="form-control" name="txtCantidad" id="txtCantidad" value="<?php echo $producto->cantidad ?>">
             </div>
             <div class="col-6 form-group">
                 <label for="txtPrecio">Precio:</label>
-                <input type="text" class="form-control" name="txtPrecio" id="txtPrecio" required value="<?php echo $producto->precio ?>">
+                <input type="text" class="form-control" name="txtPrecio" id="txtPrecio"  value="<?php echo $producto->precio ?>">
             </div>
             <div class="col-12 form-group">
                 <label for="txtDescripcion">Descripción:</label>

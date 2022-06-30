@@ -6,10 +6,7 @@ include_once "entidades/cliente.php";
 $pg = "Listado de ventas";
 
 $venta = new Venta();
-$aVentas = $venta->obtenerTodos();
-
-$cliente = new Cliente();
-$aClientes = $cliente->obtenerTodos();
+$aVentas = $venta->cargarGrilla();
 
 include_once("header.php");
 ?>
@@ -28,16 +25,20 @@ include_once("header.php");
 
             <th>Fecha</th>
             <th>Cliente</th>
+            <th>Producto</th>
             <th>Cantidad</th>
             <th>Precio Unitario</th>
             <th>Total</th>
+            <th>Consulta</th>
+
 
         </tr>
         <?php foreach ($aVentas as $venta) : ?>
             <tr>
 
                 <td><?php echo date_format(date_create($venta->fecha), "d/m/Y"); ?></td>
-                <td><?php echo $venta->fk_idcliente; ?></td>
+                <td><a href="cliente-formulario.php?id=<?php echo $venta->fk_idcliente; ?>"><?php echo $venta->nombre_cliente; ?></a></td>
+                <td><a href="producto-formulario.php?id=<?php echo $venta->fk_idproducto; ?>"><?php echo $venta->nombre_producto; ?></a></td>
                 <td><?php echo $venta->cantidad; ?></td>
                 <td><?php echo $venta->preciounitario; ?></td>
                 <td><?php echo $venta->total; ?></td>
