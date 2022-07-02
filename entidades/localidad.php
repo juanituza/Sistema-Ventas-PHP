@@ -39,6 +39,8 @@ class Localidad{
        
         }
         return $aLocalidades;
+
+        
     }
 
 }
