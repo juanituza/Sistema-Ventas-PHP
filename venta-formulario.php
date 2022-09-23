@@ -27,7 +27,17 @@ if ($_POST) {
     }
 }
 
-
+if (isset($_GET["do"]) && $_GET["do"] == "buscarProducto") {
+    $aResultado = array();
+    $idProducto = $_GET["id"];
+    $producto = new Producto();
+    $producto->idproducto = $idProducto;
+    $producto->obtenerPorId();
+    $aResultado["precio"] = $producto->precio;
+    $aResultado["cantidad"] = $producto->cantidad;
+    echo json_encode($aResultado);
+    exit;
+}
 
 if (isset($_GET["id"]) && $_GET["id"] > 0) {
     $venta->obtenerPorId();
@@ -113,7 +123,7 @@ include_once("header.php");
         </div>
         <div class="col-6 form-group">
             <label for="lstProducto">Producto:</label>
-            <select class="form-control" name="lstProducto" id="lstProducto" onchange="" required>
+            <select class="form-control" name="lstProducto" id="lstProducto" onchange="fBuscarPrecio();" required>
                 <option value="" disabled selected>Seleccionar</option>
                 <?php foreach ($aProductos as $producto) : ?>
                     <?php if ($venta->fk_idproducto == $producto->idproducto) : ?>
@@ -126,11 +136,13 @@ include_once("header.php");
         </div>
         <div class="col-6 form-group">
             <label for="txtCantidad">Cantidad:</label>
-            <input type="number" class="form-control" name="txtCantidad" id="txtCantidad" value="<?php echo $venta->cantidad ?>">
+            <input type="number" class="form-control" name="txtCantidad" id="txtCantidad" onchange="fCalcularTotal();" value="<?php echo $venta->cantidad ?>">
+            <span id="msgStock" class="text-danger" style="display:none;">No hay stock suficiente</span>
         </div>
         <div class="col-6 form-group">
             <label for="txtPreciounitario">Precio Unitario:</label>
-            <input type="number" class="form-control" name="txtPreciounitario" id="txtPreciounitario" value="<?php echo $venta->preciounitario ?>">
+            <input type="text" class="form-control" name="txtPreciounitario" id="txtPrecioUniCurrency" value="$<?php echo $venta->preciounitario ?>">
+            <input type="hidden" class="form-control" name="txtPreciounitario" id="txtPreciounitario" value="<?php echo $venta->preciounitario ?>">
         </div>
         <div class="col-6 form-group">
             <label for="txtTotal">Total:</label>
@@ -167,6 +179,56 @@ include_once("header.php");
                     resultado += `<option value="${valor.idlocalidad}">${valor.nombre}</option>`;
                 });
                 $("#lstLocalidad").empty().append(resultado);
+            }
+        });
+    }
+
+    function fBuscarPrecio() {
+        let idProducto = $("#lstProducto option:selected").val();
+        $.ajax({
+            type: "GET",
+            url: "venta-formulario.php?do=buscarProducto",
+            data: {
+                id: idProducto
+            },
+            async: true,
+            dataType: "json",
+            success: function(respuesta) {
+                let strResultado = Intl.NumberFormat("es-AR", {
+                    style: 'currency',
+                    currency: 'ARS'
+                }).format(respuesta.precio);
+                $("#txtPrecioUniCurrency").val(strResultado);
+                $("#txtPreciounitario").val(respuesta.precio);
+            }
+        });
+    }
+
+    function fCalcularTotal() {
+        var idProducto = $("#lstProducto option:selected").val();
+        var precio = parseFloat($('#txtPreciounitario').val());
+        var cantidad = parseInt($('#txtCantidad').val());
+
+        $.ajax({
+            type: "$_GET",
+            url: "venta-formulario.php?do=buscarProducto",
+            data: {
+                id: idProducto
+            },
+            async: true,
+            dataType: "json",
+            success: function(respuesta) {
+                let resultado = 0,
+                    if (cantidad <= parseInt(respuesta.cantidad)) {
+                        resultado = precio * cantidad;
+                    } else {
+                        $("#msgStock").show();
+                    }
+                strResultado = Intl.NumberFormat("es-AR", {
+                    style: 'currency',
+                    currency: 'ARS'
+                }).format(resultado);
+                $('#txtTotal').val(strResultado);
             }
         });
     }

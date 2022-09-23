@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 include_once("config.php");
 
 if (!isset($_SESSION["nombre"])) {
-    header("Location: login.php");
+  header("Location: login.php");
 }
 
 
@@ -44,6 +44,7 @@ if (isset($_POST["btnCerrar"])) {
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
   <script type="text/javascript" src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
